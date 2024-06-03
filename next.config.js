@@ -1,10 +1,3 @@
-const nextConfig = {
-    output: "export",
-    basePath: "/minning-app",
-    images: {
-        unoptimized: true,
-
-    },
-}
+const nextConfig = {}
 
 module.exports = nextConfig

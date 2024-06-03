@@ -24,8 +24,8 @@ const Navbar = ({ session }) => {
         <Box sx={{ width: "30%", paddingRight: "50px", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", fontSize: "18pt" }}>
           {session && ( 
             <>
-              {session.user.role === "admin" && <Typography sx={{fontSize: "18pt", fontFamily: '"Times New Roman", Times, serif', color: "black", cursor: "pointer",  ":hover" : {color: "gray", textShadow: "1px 1px 0px #efa8a8"}}} onClick={() => router.push("/dashboard")}>Dashboard</Typography>}
-              <Typography sx={{fontSize: "18pt", fontFamily: '"Times New Roman", Times, serif', color: "black", cursor: "pointer",  ":hover" : {color: "gray", textShadow: "1px 1px 0px #efa8a8"}}} onClick={() => router.push("/tracker")}>Tracker</Typography>
+              {session.user.role === "admin" && <Typography sx={{fontSize: "18pt", fontFamily: '"Times New Roman", Times, serif', color: "black", cursor: "pointer",  ":hover" : {color: "gray", textShadow: "1px 1px 0px #efa8a8"}}} onClick={() => router.replace("/dashboard")}>Dashboard</Typography>}
+              <Typography sx={{fontSize: "18pt", fontFamily: '"Times New Roman", Times, serif', color: "black", cursor: "pointer",  ":hover" : {color: "gray", textShadow: "1px 1px 0px #efa8a8"}}} onClick={() => router.replace("/tracker")}>Tracker</Typography>
             </>
           )}
           {session ? (
@@ -47,9 +47,6 @@ const Navbar = ({ session }) => {
                   <MenuItem onClick={handleClose}>My account</MenuItem>
                   <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                 </Menu>
-              {/* <Button sx={{ backgroundColor: "red", fontFamily: '"Times New Roman", Times, serif', color: "white" }} onClick={() => signOut()}>
-                Logout
-              </Button> */}
             </Box>
           ) : (
             <Button sx={{ backgroundColor: "green", fontFamily: '"Times New Roman", Times, serif', color: "white" }} onClick={() => router.push("/login")}>
