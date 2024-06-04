@@ -70,14 +70,16 @@ const RegisterForm = () => {
             <TextField variant="standard" label="Email" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)}/>
             <TextField variant="standard" label="Password" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)}/>
             <Button variant="contained" sx={{backgroundColor: "greenyellow", color: "grey"}} type="submit">Register</Button>
-            { error && (
-              <Typography sx={{backgroundColor: "red", borderRadius: "3px", padding: "2px", fontSize: "12pt"}}>{error}</Typography>
-            )}
             <Link href={"/"}>
                 <Typography>Already have an account? <span>Login</span></Typography>
             </Link>
           </form>
-        </Box> 
+        </Box>
+        { error && (
+            <Box sx={{paddingLeft: "10px", paddingRight: "10px"}}>
+              <Typography sx={{backgroundColor: "red", borderRadius: "3px", padding: "2px", fontSize: "12pt"}}>{error}</Typography>
+            </Box>
+          )}
       </Box>
     </Box>
   )
