@@ -46,7 +46,7 @@ const MapDashboard = () => {
       });
       setView(view);
       const geoJSONLayer = new GeoJSONLayer({
-        url: "http://localhost:3000/api/userLocation",
+        url: "https://matiur-minning-app.vercel.app/api/userLocation",
         refreshInterval: 0.1,
       });
       setGeoJSON(geoJSONLayer);
