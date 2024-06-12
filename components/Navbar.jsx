@@ -2,7 +2,7 @@
 
 import { AccountCircle } from '@mui/icons-material'
 import { Box, Button, Menu, MenuItem, Typography } from '@mui/material'
-import { signOut } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -49,7 +49,7 @@ const Navbar = ({ session }) => {
                 </Menu>
             </Box>
           ) : (
-            <Button sx={{ backgroundColor: "green", fontFamily: '"Times New Roman", Times, serif', color: "white" }} onClick={() => router.push("/login")}>
+            <Button sx={{ backgroundColor: "green", fontFamily: '"Times New Roman", Times, serif', color: "white" }} onClick={() => signIn()}>
               Login
             </Button>
           )}

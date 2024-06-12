@@ -143,6 +143,7 @@ const MapComponent = () => {
             graphics: [userLocationMarker, userLocationLabel],
           });
   
+          map.removeAll();
           map.add(graphicUserLocation);
           view.goTo({
             center: [longitude, latitude],
