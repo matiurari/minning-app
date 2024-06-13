@@ -193,7 +193,7 @@ const MapComponent = () => {
   }
 
   return (
-    <Box sx={{ width: "100%", height: "90%"}} ref={mapRef}>
+    <Box sx={{ width: "100%", height: "100%"}} ref={mapRef}>
       <Box sx={{ display: "flex", flexDirection: "row", position: "absolute", left: "50%", bottom: "2%", width: "250px", height: "75px", justifyContent: "space-around", alignItems: "center", transform: "translate(-50%)" }}>
         <Button sx={{ width: "100px", height: "50px", backgroundColor: "yellowgreen", ":hover": { backgroundColor: "yellowgreen" }, fontWeight: "bold", color: "white" }} onClick={startTracking} disabled={isTracking}>
           Start

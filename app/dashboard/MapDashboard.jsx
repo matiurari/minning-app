@@ -7,7 +7,6 @@ import Map from "@arcgis/core/Map.js";
 import MapView from "@arcgis/core/views/MapView.js";
 import Popup from "@arcgis/core/widgets/Popup.js";
 import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer.js";
-import FeatureList from "./FeatureList";
 import Field from "@arcgis/core/layers/support/Field.js";
 import LayerStats from "./LayerStats";
 import Query from "@arcgis/core/rest/support/Query";
@@ -72,9 +71,8 @@ const MapDashboard = () => {
         }
       }
     })
-
     const geojsonLayer = new GeoJSONLayer({
-      url: "http://localhost:3000/api/userLocation",
+      url: `http://localhost:3000/api/userLocation`,
       title: "User Location",
       visible: true,
       fields: fields,
@@ -138,14 +136,9 @@ const MapDashboard = () => {
   }, []);
 
   return (
-    <Box sx={{ width: "100%", height: "90%", position: "relative" }} ref={mapRef}>
-      <LayerStats
-        featureCount={featureCount}
-        offlineFeatureCount={offlineFeatureCount}
-        onlineFeatureCount={onlineFeatureCount}
-      />
+    <Box sx={{ width: "100%", height: "100%", position: "relative" }} ref={mapRef}>
+      <LayerStats featureCount={featureCount} offlineFeatureCount={offlineFeatureCount} onlineFeatureCount={onlineFeatureCount}/>
       <Box sx={{ left: "2%", top: "2%", display: "flex", position: "absolute" }}>
-        {/* Add your FeatureList component here if needed */}
       </Box>
     </Box>
   );
