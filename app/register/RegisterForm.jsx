@@ -1,15 +1,17 @@
 "use client"
 
-import { Box, TextField, Typography, Button } from "@mui/material"
+import { Box, TextField, Typography, Button, IconButton } from "@mui/material"
 import Link from "next/link"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { HighlightOff } from "@mui/icons-material"
 
 const RegisterForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const errorRef = useRef();
 
   const router = useRouter();
 
@@ -50,7 +52,7 @@ const RegisterForm = () => {
       if (res.ok) {
         const form = e.target;
         form.reset();
-        router.push("/")
+        router.push("/login")
       } else {
         const data = await res.json();
         setError(data.message || "User registration failed.");
@@ -58,6 +60,12 @@ const RegisterForm = () => {
     } catch (error) {
       console.error("Error during registration: ", error);
     }
+  }
+
+  const closeError = () => {
+    setError("");
+    const element = errorRef.current;
+    element.onLoad = null;
   }
 
   return (
@@ -70,14 +78,17 @@ const RegisterForm = () => {
             <TextField variant="standard" label="Email" placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)}/>
             <TextField variant="standard" label="Password" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)}/>
             <Button variant="contained" sx={{backgroundColor: "greenyellow", color: "grey"}} type="submit">Register</Button>
-            <Link href={"/"}>
+            <Link href={"/login"}>
                 <Typography>Already have an account? <span>Login</span></Typography>
             </Link>
           </form>
         </Box>
         { error && (
-            <Box sx={{paddingLeft: "10px", paddingRight: "10px"}}>
+            <Box sx={{paddingLeft: "10px", paddingRight: "10px", display: "flex", flexDirection: "row", columnGap: "3px"}} ref={errorRef}>
               <Typography sx={{backgroundColor: "red", borderRadius: "3px", padding: "2px", fontSize: "12pt"}}>{error}</Typography>
+              <IconButton sx={{width: "30px", height: "30px"}} onClick={() => closeError()}>
+                <HighlightOff />
+              </IconButton>
             </Box>
           )}
       </Box>
