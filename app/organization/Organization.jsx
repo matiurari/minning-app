@@ -92,7 +92,7 @@ const Organization = ({ session }) => {
         </TableContainer>
       </Box>
       <Modal open={passwordOpen} onClose={closeModal}>
-        <Box sx={{width: "300px", height: "200px", backgroundColor: "white", position: "absolute", left: "50vw", top: "30vh", transform: "translate(-50%, -50%)"}}>
+        <Box sx={{width: "00px", height: "200px", backgroundColor: "white", position: "absolute", left: "50vw", top: "30vh", transform: "translate(-50%, -50%)"}}>
           INI MODAL
         </Box>
       </Modal>
