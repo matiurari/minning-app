@@ -1,14 +1,34 @@
 "use client";
 
-import { Password, Remove, Restore } from "@mui/icons-material";
-import { Box, CircularProgress, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Password, PersonRemove } from "@mui/icons-material";
+import { Box, Button, CircularProgress, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+
+const modalStyle = {
+  width: "600px",
+  height: "300px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "absolute",
+  left: "50vw",
+  top: "30vh",
+  backgroundColor: "white",
+  transform: "translate(-50%, -50%)",
+  borderRadius: "7px",
+};
 
 const Organization = ({ session }) => {
   const [userList, setUserList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [currentUser, setCurrentUser] = useState();
+  const [bothPasswordsEntered, setBothPasswordsEntered] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -33,23 +53,80 @@ const Organization = ({ session }) => {
     }
   }, [session]);
 
+  useEffect(() => {
+    if(newPassword && confirmNewPassword){
+      setPasswordMatch(newPassword === confirmNewPassword);
+    }
+    setBothPasswordsEntered(newPassword !== '' && confirmNewPassword !== '');
+  }, [newPassword, confirmNewPassword]);
+
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "100%", width: "100%" }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <Typography color="error">{error}</Typography>;
+    return (
+      <Typography color="error" variant="h6">
+        An error occurred while fetching user data: {error}
+      </Typography>
+    );
+  }
+
+  const openModal = (user) => {
+    setPasswordOpen(true);
+    setCurrentUser(user);
   }
 
   const closeModal = () => {
     setPasswordOpen(false);
+    setPasswordMatch(false);
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setCurrentUser(null);
+  };
+
+  const handleNewPassword = (e) => {
+    e.preventDefault();
+    setNewPassword(e.target.value);
   }
+
+  const handleConfirmNewPassword = (e) => {
+    e.preventDefault();
+    setConfirmNewPassword(e.target.value);
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/changePassword", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: currentUser.email,
+          newPassword: newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to change password');
+      }
+
+      closeModal();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-      <Box sx={{width: "50%"}}>
-        <TableContainer component={Paper} sx={{backgroundColor: "#c6e5ef", borderRadius: "7px"}}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Box sx={{width: "70%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <TableContainer component={Paper} sx={{ maxWidth: "700px", backgroundColor: "#c6e5ef", borderRadius: "7px"}}>
+          <Table aria-label="simple table">
             <TableHead sx={{backgroundColor: "#97d8ed"}}>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -73,13 +150,13 @@ const Organization = ({ session }) => {
                     {user.role === "surveyor" && (
                       <>
                         <Tooltip title="Set Password" placement="top">
-                          <IconButton onClick={() => setPasswordOpen(true)}>
+                          <IconButton onClick={() => openModal(user)}>
                             <Password />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Remove Account" placement="top">
                           <IconButton>
-                            <Restore />
+                            <PersonRemove />
                           </IconButton>
                         </Tooltip>
                       </>
@@ -92,8 +169,43 @@ const Organization = ({ session }) => {
         </TableContainer>
       </Box>
       <Modal open={passwordOpen} onClose={closeModal}>
-        <Box sx={{width: "00px", height: "200px", backgroundColor: "white", position: "absolute", left: "50vw", top: "30vh", transform: "translate(-50%, -50%)"}}>
-          INI MODAL
+        <Box sx={modalStyle}>
+          <Box sx={{ width: "100%", height: "20%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Typography sx={{ fontSize: "20pt", fontFamily: '"Times New Roman", Times, serif' }}>
+              Set New Password for {currentUser?.name}
+            </Typography>
+          </Box>
+          <Box sx={{ width: "100%", height: "80%", display: "flex", flexDirection: "column", rowGap: "3px", justifyContent: "center", alignItems: "center" }}>
+            <Box>
+              <Typography sx={{ fontSize: "14pt", fontFamily: '"Times New Roman", Times, serif' }}>
+                New Password
+              </Typography>
+              <TextField 
+                type="password" 
+                sx={{ width: "300px" }} 
+                onChange={handleNewPassword} 
+                value={newPassword} 
+              />
+            </Box>
+            <Box>
+              <Typography sx={{ fontSize: "14pt", fontFamily: '"Times New Roman", Times, serif' }}>
+                Confirm New Password
+              </Typography>
+              <TextField 
+                type="password" 
+                sx={{ width: "300px" }} 
+                onChange={handleConfirmNewPassword} 
+                value={confirmNewPassword} 
+                error={!passwordMatch && newPassword && confirmNewPassword} 
+                helperText={(!passwordMatch && newPassword && confirmNewPassword) ? "Password does not match" : ""} 
+              />
+            </Box>
+            <Box>
+              <Button variant="contained" disabled={!bothPasswordsEntered || !passwordMatch} onClick={handleSubmit}>
+                Submit
+              </Button>
+            </Box>
+          </Box>
         </Box>
       </Modal>
     </Box>

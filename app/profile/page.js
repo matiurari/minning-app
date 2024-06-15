@@ -12,7 +12,7 @@ const page = async () => {
             <Box sx={{position: "absolute", left: "0px", top: "0px", width: "100%", height: "10%"}}>
                 <Navbar session={session} />
             </Box>
-            <Box sx={{position: "absolute", left: "50%", top: "50%"}}>
+            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "90%"}}>
                 <Profile session={session} />
             </Box>
         </Box>

@@ -70,9 +70,10 @@ const MapDashboard = () => {
           weight: "bold"
         }
       }
-    })
+    });
+
     const geojsonLayer = new GeoJSONLayer({
-      url: `http://localhost:3000/api/userLocation`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/api/userLocation`,
       title: "User Location",
       visible: true,
       fields: fields,
