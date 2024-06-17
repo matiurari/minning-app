@@ -1,7 +1,7 @@
 "use client";
 
 import { Password, PersonRemove } from "@mui/icons-material";
-import { Box, Button, CircularProgress, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, IconButton, Modal, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const modalStyle = {
@@ -29,29 +29,32 @@ const Organization = ({ session }) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [currentUser, setCurrentUser] = useState();
   const [bothPasswordsEntered, setBothPasswordsEntered] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     if (session) {
-      const getUser = async () => {
-        try {
-          const response = await fetch("/api/userTable");
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-          const data = await response.json();
-
-          const sortedData = data.sort((a, b) => a.role.localeCompare(b.role));
-
-          setUserList(sortedData);
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      getUser();
+      fetchUserList();
     }
   }, [session]);
+
+  const fetchUserList = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/userTable");
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const data = await response.json();
+
+      const sortedData = data.sort((a, b) => a.role.localeCompare(b.role));
+
+      setUserList(sortedData);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if(newPassword && confirmNewPassword){
@@ -99,7 +102,7 @@ const Organization = ({ session }) => {
     setConfirmNewPassword(e.target.value);
   }
 
-  const handleSubmit = async () => {
+  const handleSetPassword = async () => {
     try {
       const response = await fetch("/api/changePassword", {
         method: 'POST',
@@ -121,6 +124,29 @@ const Organization = ({ session }) => {
       setError(error.message);
     }
   };
+
+  const handleDeleteUser = async (email) => {
+    try {
+      const response = await fetch("/api/userRemove", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: email})
+      });
+      if(!response.ok){
+        throw new Error("Failed to delete user");
+      }
+      setNotification({ open: true, message: "User deleted successfully.", severity: "success"});
+      fetchUserList();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({...notification, open: false})
+  }
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -155,7 +181,7 @@ const Organization = ({ session }) => {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Remove Account" placement="top">
-                          <IconButton>
+                          <IconButton onClick={() => handleDeleteUser(user.email)}>
                             <PersonRemove />
                           </IconButton>
                         </Tooltip>
@@ -201,13 +227,18 @@ const Organization = ({ session }) => {
               />
             </Box>
             <Box>
-              <Button variant="contained" disabled={!bothPasswordsEntered || !passwordMatch} onClick={handleSubmit}>
+              <Button variant="contained" disabled={!bothPasswordsEntered || !passwordMatch} onClick={handleSetPassword}>
                 Submit
               </Button>
             </Box>
           </Box>
         </Box>
       </Modal>
+      <Snackbar open={notification.open} autoHideDuration={6000} onClose={handleCloseNotification}>
+        <Alert onClose={handleCloseNotification} severity={notification.severity}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

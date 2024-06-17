@@ -84,7 +84,7 @@ const Profile = ({session}) => {
       </Box>
       <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center", width: "100%", height: "10%"}}>
         <Button variant='contained' onClick={openModal}>Set Password</Button>
-        <Button variant='contained'>Set Picture</Button>
+        <Button variant='contained' disabled>Set Picture</Button>
       </Box>
       <Box sx={{display: "flex", flexDirection: "row", height: "30%", width: "100%", justifyContent: "space-around"}}>
         <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start", width: "20%"}}>
