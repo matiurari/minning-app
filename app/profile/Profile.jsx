@@ -1,7 +1,7 @@
 "use client";
 
 import { AccountCircle } from '@mui/icons-material'
-import { Box, Button, Divider, Modal, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Divider, Modal, Snackbar, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 
 const modalStyle = {
@@ -25,6 +25,7 @@ const Profile = ({session}) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [bothPasswordsEntered, setBothPasswordsEntered] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     if(newPassword && confirmNewPassword){
@@ -70,12 +71,16 @@ const Profile = ({session}) => {
       if (!response.ok) {
         throw new Error('Failed to change password');
       }
-
+      setNotification({ open: true, message: "User password successfully changed.", severity: "success"});
       closeModal();
     } catch (error) {
       setError(error.message);
     }
   };
+
+  const handleCloseNotification = () => {
+    setNotification({...notification, open: false})
+  }
   
   return (
     <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "350px", height: "500px", boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", borderRadius: "7px"}}>
@@ -144,6 +149,11 @@ const Profile = ({session}) => {
           </Box>
         </Box>
       </Modal>
+      <Snackbar open={notification.open} autoHideDuration={6000} onClose={handleCloseNotification}>
+        <Alert onClose={handleCloseNotification} severity={notification.severity}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

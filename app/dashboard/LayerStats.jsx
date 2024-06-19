@@ -9,7 +9,7 @@ const LayerStats = ({featureCount, offlineFeatureCount, onlineFeatureCount}) => 
                 <Typography sx={{ fontSize: "32pt" }}>{featureCount}</Typography>
                 <Typography sx={{ fontSize: "18pt" }}>User Located</Typography>
             </Box>
-            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "220px", backgroundColor: "#F7C2C2"}}>
+            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "220px", backgroundColor: "#AFE1AF"}}>
                 <Typography sx={{ fontSize: "32pt" }}>{onlineFeatureCount}</Typography>
                 <Typography sx={{ fontSize: "18pt" }}>Online User</Typography>
             </Box>

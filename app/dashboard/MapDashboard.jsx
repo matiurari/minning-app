@@ -123,7 +123,7 @@ const MapDashboard = () => {
       }
     };
 
-    const intervalId = setInterval(periodicFunction, 10000);
+    const intervalId = setInterval(periodicFunction, 5000);
 
     return () => {
       clearInterval(intervalId);

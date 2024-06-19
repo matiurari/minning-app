@@ -118,7 +118,7 @@ const Organization = ({ session }) => {
       if (!response.ok) {
         throw new Error('Failed to change password');
       }
-
+      setNotification({ open: true, message: "User password successfully changed.", severity: "success"});
       closeModal();
     } catch (error) {
       setError(error.message);
